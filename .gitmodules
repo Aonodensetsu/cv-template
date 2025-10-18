@@ -1,0 +1,3 @@
+[submodule "utf8lua"]
+	path = utf8lua
+	url = https://github.com/Stepets/utf8.lua

@@ -1,0 +1,497 @@
+% Copyright 2025, Remigiusz Dończyk
+% Usage allowed as a resume template
+% Or otherwise a LaTeX learning tool
+% This document uses the LuaLaTeX engine
+
+% pdf tagging is currently incompatible with paracol, but i am planning to use it when it becomes available
+% https://github.com/latex3/tagging-project/issues/227
+
+% you can leave everything untouched before \begin{document}
+% compiling with no changes will yield an example document with reference of the commands you have available
+% the commands are also described in comments across this file and cv.lua
+
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{luacode}           % better support for Lua code
+\usepackage{luapackageloader}  % load lua packages
+\usepackage{bookmark}          % outfile management
+\usepackage{calc}              % math operations for lengths
+\usepackage{xcolor}            % define reusable RGB colors
+\usepackage{fontspec}          % change the main font
+\usepackage{parskip}           % paragraph layout
+\usepackage{paracol}           % column layout
+\usepackage{tabularx}          % table layout
+\usepackage{graphicx}          % include images
+\usepackage{hyperref}          % include clickable links
+\usepackage{progressbar}       % include progress bars
+\usepackage{tikz}              % drawing library
+\usetikzlibrary{fadings}       % transparency masks
+
+
+\setlength\paperwidth{210mm}
+\setlength\hoffset{-1in}
+\setlength\oddsidemargin{4mm}
+\setlength\textwidth{202mm}
+\setlength\marginparsep{0mm}
+\setlength\marginparwidth{0mm}
+\setlength\paperheight{297mm}
+\setlength\voffset{-1in}
+\setlength\topmargin{0mm}
+\setlength\headheight{4mm}
+\setlength\headsep{0mm}
+\setlength\textheight{288mm}
+\setlength\footskip{0mm}
+\setlength\columnsep{4mm}
+\setlength\fboxsep{0mm}
+\columnratio{0.35}
+
+\pagestyle{empty}
+
+\setmainfont{Source Code Pro}[
+  Path               = C:/Windows/Fonts/,
+  Extension          = .ttf,
+  UprightFont        = SourceCodePro-VariableFont_wght,
+  BoldFont           = SourceCodePro-VariableFont_wght,
+  ItalicFont         = SourceCodePro-Italic-VariableFont_wght,
+  BoldItalicFont     = SourceCodePro-Italic-VariableFont_wght,
+  Weight             = 500,
+  BoldFeatures       = { Weight = 700 },
+  BoldItalicFeatures = { Weight = 700 },
+]
+{
+  % normal
+  \fontdimen3\font=0.5em
+  \fontdimen4\font=0.25em
+  \itshape
+  % italic
+  \fontdimen3\font=0.5em
+  \fontdimen4\font=0.25em
+  \bfseries
+  % bold italic
+  \fontdimen3\font=0.5em
+  \fontdimen4\font=0.25em
+  \upshape
+  % bold
+  \fontdimen3\font=0.5em
+  \fontdimen4\font=0.25em
+}
+
+\definecolor{page}{RGB}{254,249,244}             % background
+\definecolor{section}{RGB}{82,82,148}            % sidebar and headers
+\definecolor{section-icon}{RGB}{55,55,99}        % icons over section
+\definecolor{section-compound}{RGB}{219,168,86}  % accent
+\pagecolor{page}
+\backgroundcolor{c[0]}{section}
+
+\renewcommand\tabularxcolumn[1]{m{#1}}
+
+
+% \size{NUM}
+%   set font size in pt
+%
+% \whenpdf{YES}{NO}
+%   prints YES when creating a PDF, NO otherwise
+%   useful for example for links
+%
+% \tl{ID}[FORMAT]
+%   writes a translated string defined in lua
+%   formats:
+%     upper    - UPPERCASED
+%     lower    - lowercased
+%     cap      - First letter capitalized
+%     sentence - First letter and period.
+%     title    - Every Word Capitalized
+% \tl{ID}
+%   default: FORMAT = 'normal'
+%
+% \icon[SIZE]{ICON}[STYLE]
+%   draws a fontawesome icon from a given style
+%   matches font size, adjustable ratio
+%   https://fontawesome.com/search
+% \icon{ICON}[STYLE]
+%   default: SIZE = 1
+% \icon{ICON}
+%   default: STYLE = 'regular'
+%
+% \link[NAME]{URL}
+%   displays a clickable link
+%   non-pdf: just prints the name
+% \link{URL}
+%   default: NAME = URL
+%
+% \separate[NUM]
+%   draws horizontal lines breaking up the flow
+%   the more lines are selected the larger whitespace also gets created
+% \separate
+%   default: NUM = 1
+%
+% \starbar[FRAC]
+%   draws a progress bar filled to NUM out of 1
+%   if full, shows a star icon
+% \starbar
+%   default: FRAC = 1
+%
+% -- above functions defined in lua --
+\directlua{require'cv'}
+
+% \pill{TEXT}
+%   draws text within an outline
+\NewDocumentCommand{\pill}{ m }{%
+  \begingroup%
+  \size{7}%
+  \tikz[baseline=-0.5ex]{
+    \node[
+      text=page,
+      draw=section,
+      fill=section!80,
+      minimum height=1.7em,
+      minimum width=2em,
+      inner xsep=0.6em,
+      inner ysep=0.6em,
+      line width=0.15em,
+      text height=0.8em,
+      text depth=0.2em,
+      rounded corners=1em,
+    ] {#1};
+  }%
+  \endgroup%
+}
+
+% \aside{TITLE}
+%   starts a sidebar section
+\NewDocumentCommand{\aside}{ m }{%
+  \par\vspace{5mm}%
+  \begingroup%
+    \linespread{1}\selectfont%
+    {\size{12}#1}\\%
+    {\rule{0.7\columnwidth}{0.4pt}}\\%
+  \endgroup%
+}
+
+% \header{ICON}[STYLE]{TEXT}
+%   draws a bar spanning the column and a left-aligned icon and text
+% \header{ICON}{TEXT}
+%   default: STYLE = 'solid'
+\NewDocumentCommand{\header}{ m O{solid} m }{%
+  \begingroup%
+  \size{14}%
+  \vspace{1mm}%
+  \par%
+  \colorbox{section}{%
+    \begin{minipage}[c][1em][b]{\columnwidth}%
+      \begin{tabularx}{\columnwidth}{@{}m{2em}@{}X@{}}%
+        \centering\color{section-icon}\icon[1.25]{#1}[#2] &%
+        \color{page}#3%
+      \end{tabularx}%
+    \end{minipage}%
+  }%
+  \par%
+  \endgroup%
+}
+
+% \role{ROLE}{PLACE}{CITY}{START}[END][SPLIT]
+%   writes out a work/education entry information
+%   the column length ratio is defined by SPLIT (first column takes 0.7 out of 1 by default)
+% \role{ROLE}{PLACE}{CITY}{START}[END]
+%   default: SPLIT = 0.7
+% \role{ROLE}{PLACE}{CITY}{START}
+%   default: END = '\tl{ongoing}'
+\NewDocumentCommand{\role}{ m m m m O{\tl{ongoing}} O{0.7} }{%
+  \par\vspace{1mm}%
+  \begin{minipage}[c]{#6\columnwidth}%
+    {\size{11}\bfseries #1} \\%
+    {\color{section-compound}\icon[1.2]{at}} #2%
+  \end{minipage}%
+  \begin{minipage}[c]{\columnwidth-#6\columnwidth}%
+    \raggedleft\size{8}%
+    #3 \\%
+    #4 - #5%
+  \end{minipage}%
+  \separate%
+  \par%
+}
+
+% \point[ICON][STYLE]{TEXT}
+%   draws a compound-colored icon and one paragraph of text
+%   ends the paragraph
+% \point[ICON]{TEXT}
+%   default: STYLE = 'regular'
+% \point{TEXT}
+%   default: ICON = 'angle-right'
+\newsavebox{\iconbox}
+\NewDocumentCommand{\point}{ O{angle-right} O{regular} m }{%
+  \begingroup%
+  \par%
+  \sbox{\iconbox}{\hspace{1mm}\color{section-compound}\icon[1.1]{#1}[#2]\hspace{1ex}}%
+  \hangindent=\wd\iconbox\relax%
+  \hangafter=1%
+  \usebox{\iconbox}%
+  #3%
+  \par%
+  \endgroup%
+}
+
+
+\begin{document}
+  \begin{paracol}{2}
+    \begin{center}
+      \linespread{1.3}\selectfont
+      \color{page}
+      % --- SIDE BAR ---
+      \vspace*{15mm}
+	  \includegraphics[width=0.7\columnwidth]{self}
+
+	  % example content
+      % you probably want to replace this with your resume
+
+      \begingroup
+        \size{8}
+        Tip: Filling up the page will move the~rest of the content to the next one.
+        You might want to use \verb!\newpage! in some places to make sure it continues from the~place you want it to.
+      \endgroup
+
+      % end of example content
+      % below is a disclaimer you probably want to uncomment and keep
+
+      %\vspace{\fill}
+      %\begingroup\size{7} \tl{m_accuracy}[cap] 18.10.2025\endgroup
+    \end{center}
+    \switchcolumn
+    % --- MAIN BAR ---
+    
+	% example content
+    % you probably want to replace this with your resume
+
+    Hey! Thanks for checking this file out!
+
+    This is the example content that will quickly outline\\
+    the~commands prepared for use in this template.
+
+    \vspace{4mm}
+
+    \verb!\size{NUM}!
+
+    Will change the size of the text in \textit{pt}, \textbf{10} is the default.
+
+    \begingroup\color{gray}\verb!\size{7} some text!:\endgroup\ \begingroup\size{7} some text\endgroup
+
+    You can delimit where the size is changed by using:
+
+    \begingroup\bfseries\verb!\begingroup!\endgroup\ \verb!\size{12}! \begingroup\size{12} big text here \endgroup\begingroup\bfseries\verb!\endgroup!\endgroup
+
+    (this is a \TeX\ feature and will work for other styles)
+
+    \vspace{4mm}
+
+    \verb!\whenpdf{YES}{NO}!
+
+    Prints the content of \textit{YES} when compiling the PDF version and~\textit{NO}~when compiling the PNG version.
+    The version is selected with the \textit{CVVER} environment variable. The provided compile script makes both.
+
+    The clickable links use it to display as normal text in image form, since they're not clickable on the image anyway.
+
+    You can use it for anything else, it allows putting whole paragraphs inside {\scriptsize(long type arguments)}.
+
+    \begingroup\color{gray}\verb!\whenpdf{PDF}{PNG}!:\endgroup
+
+    You are currently looking at the \textbf{\whenpdf{PDF}{PNG}} version of the document.
+
+    \vspace{4mm}
+
+    \verb!\tl{ID}[FORMAT]!
+
+    Inserts translated text (the translations are set in the Lua file), optionally formatting it.
+
+    The language is selected with the \textit{CVLANG} environment flag. The provided compile script can be set to compile all desired language variants (line 2).
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}\verb!\tl{m_accuracy}[title]!:\endgroup\\
+      \tl{m_accuracy}[title]
+
+      \begingroup\color{lightgray}\verb!\tl{ongoing}[upper]!:\endgroup\\
+      \tl{ongoing}[upper]
+
+    \end{center}
+
+    \switchcolumn
+
+    Formats:
+    \begin{itemize}
+      \item \textbf{normal:} Doesn't change anything in the text (don't specify the format for this)
+      \item \textbf{upper:} PRINTS THE TEXT AS UPPERCASE
+      \item \textbf{lower:} prints the text as lowercase
+      \item \textbf{cap:} Capitalizes the first letter
+      \item \textbf{sentence:} Like cap, adds a dot at the end.
+      \item \textbf{title:} Uses The Rules of Title Case (english rules provided, other languages need setup in the Lua file)
+    \end{itemize}
+
+    \vspace{4mm}
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}\verb!\icon[1.5]{square}!:\endgroup\ \icon[1.5]{square}\\
+      \begingroup\color{lightgray}\verb!\icon{square}!:\endgroup\ \icon{square}\\
+      \begingroup\color{lightgray}\verb!\icon[0.5]{square}!:\endgroup\ \icon[0.5]{square}
+
+      \begingroup\color{lightgray}\verb!\icon{circle}[light]!:\endgroup\ \icon{circle}[light]\\
+      \begingroup\color{lightgray}\verb!\icon{circle}!:\endgroup\ \icon{circle}\\
+      \begingroup\color{lightgray}\verb!\icon{circle}[solid]!:\endgroup\ \icon{circle}[solid]
+
+    \end{center}
+
+    \switchcolumn
+
+    \verb!\icon[SIZE]{ICON}[STYLE]!
+
+    Inserts a FontAwesome icon by name. Converts it to an image first, so that it is not seen by bots as text.
+
+    The icon is scaled to the current text size at \textit{SIZE} = 1 (which is the default). Values above 1 grow it, and vice versa.
+
+    The style parameter selects between available FontAwesome font variants.
+
+    \vspace{4mm}
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}\verb!\link{https://example.com}!:\endgroup\\
+      \link{https://example.com}
+
+    \end{center}
+
+    \switchcolumn
+
+    \verb!\link[NAME]{URL}!
+
+    Inserts a link, the link is clickable and highlighted in the~\textit{PDF} version.
+    In the \textit{PNG} version, it simply displays the \textit{NAME}.
+
+    If \textit{NAME} is not specified, its value is the same as \textit{URL}.
+
+    \begingroup\color{gray}\verb!\link[name]{https://example.com}!:\endgroup\ \link[name]{https://example.com}
+
+    \newpage
+
+    \verb!\separate[NUM]!
+
+    Draws horizontal lines dividing the content. Meant to go~between ``\textit{separate}'' topics in the main content.
+
+    \begingroup\color{gray}\verb!\separate!:\endgroup
+    \separate
+
+    \begingroup\color{gray}\verb!\separate[5]!:\endgroup
+    \separate[5]
+
+    \vspace{4mm}
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}\verb!\starbar!:\endgroup
+      \starbar
+
+      \begingroup\color{lightgray}\verb!\starbar[0.5]!:\endgroup
+      \starbar[0.5]
+
+    \end{center}
+
+    \switchcolumn
+
+    \verb!\starbar[FRAC]!
+
+    Draws a progress bar. When full, marks it with a star icon. The default value is full.
+
+    The background color of the bar matches the background of~the~sidebar, it's best used as a highlighted skills section.
+
+    (amount of stars / 5 apparently leads to negative connotations, a continuum does not)
+
+    \vspace{4mm}
+
+    \verb!\pill{TEXT}!
+
+    Writes an outlined piece of text. Designed for short tags in~the main content.
+
+    \pill{Language} \pill{Tool} \pill{Achievment} \pill{Certificate}
+
+    \pill{Will work with more text in it but at most one full line because it does not wrap................}
+
+    \vspace{4mm}
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}\verb!\aside{Title}!:\endgroup
+      \aside{Title}
+
+    \end{center}
+
+    \switchcolumn
+
+    \verb!\aside{TEXT}!
+
+    A section header meant for the sidebar. Works best in~a~centered environment, which this template provides.
+
+    \vspace{4mm}
+
+    \verb!\header{ICON}[STYLE]{TEXT}!
+
+    A section header meant for the main content. STYLE refers to~the~icon parameter. In opposition to all other uses, the style defaults to solid here, because of the colored background.
+
+    \begingroup\color{gray}\verb!\header{th-large}{Section}!:\endgroup
+    \header{th-large}{Section}
+
+    \vspace{4mm}
+
+    \verb!\role{ROLE}{PLACE}{CITY}{START}[END][SPLIT]!
+
+    Refers to a work or education section. END is an optional end time, defaulting to a translated version of ``ongoing''.
+
+    SPLIT is the fraction of space given to the left column, by~default 0.7 (this is to allow for very long texts with some manual tweaking).
+
+    \begingroup\color{gray}\verb!\role{Job Title Name}{Employer Company Ltd.}{City}{Today}!:\endgroup
+    \role{Job Title Name}{Employer Company Ltd.}{City}{Today}
+
+    \vspace{4mm}
+
+    \verb!\point[ICON][STYLE]{TEXT}!
+
+    \switchcolumn*
+
+    \begin{center}
+      \color{page}
+
+      \begingroup\color{lightgray}(default icon)\endgroup
+      \point{technically works here}
+
+    \end{center}
+
+    \switchcolumn
+
+    Draws a pointed out paragraph, you can think of it as a list item. The icon parameters are customizable as well.
+
+    \begingroup\color{gray}\verb!\point[long-arrow-alt-right]{Except...}!:\endgroup
+    \point[long-arrow-alt-right]{Except it stays aligned with the icon when the text is~longer than one line, such as here.}
+
+    By default the icon is \textit{angle-right}.
+
+    % end of example content
+    % below is a disclaimer you probably want to uncomment and keep
+
+    %\vspace{\fill}
+    %\centering{\size{7}{\tl{m_consent}[sentence]}}
+    \flushpage
+  \end{paracol}
+\end{document}
