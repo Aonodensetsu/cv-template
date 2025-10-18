@@ -20,6 +20,7 @@ A Windows [compile script](compile.ps1) is provided, which will speed up generat
 
    - luacode
    - luapackageloader
+   - lua-tinyyaml
    - bookmark
    - calc
    - xcolor
@@ -35,6 +36,6 @@ A Windows [compile script](compile.ps1) is provided, which will speed up generat
    </details>
 5. Ensure `imagemagick` is available to lua under the name `magick`.
 6. Ensure the FontAwesome Pro fonts are installed in the system (`C:\Windows\Fonts`, not the user path).  
-   I am using version `5.15.4`. Type in the font file names in [the lua file](cv.lua#L128) if they are different in your system than mine.
+   I am using version `5.15.4`. Type in the font file names in [the lua file](cv.lua#L110) if they are different in your system than mine.
 7. Ensure the Source Code Pro font is installed in the system. Adjust [the tex file](cv.tex#L53) if the file name is different on your system.
 8. You need to run LuaLaTeX with `-shell-escape`.

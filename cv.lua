@@ -26,34 +26,16 @@ local title_debug = false
 -- if a translation ID is used but not in the translations table, the ID will be displayed (for typos)
 local tl_debug = false
 
--- translation_ID = {
---   2_letter_language_code  = 'translation',
---   2_letter_language_code2 = [[
---       multiline translation2
---       new lines converted to spaces
---   ]],
--- }
-local translations = {
-    --- HEADERS ---
-    -- Sidebar headers (\aside)
-    --- SUMMARY ---
-    --- ROLES ---
-    --- POINTS ---
-    --- MISCELLANEOUS ---
-    m_consent = {
-        en = 'i~consent for my~personal data to~be~processed for~the~purpose of~recruitment',
-    },
-    m_accuracy = {
-        en = 'information accurate as of',
-    },
-    --- USED IN FUNCTIONS ---
-    ongoing = {
-        en = 'ongoing',
-    },
-}
+-- translations now found in file: translations.yaml
+
 
 local ver = os.getenv'CVVER' or 'pdf'
 local lang = os.getenv'CVLANG' or 'en'
+
+local yf = io.open('translations.yaml', 'r')
+local content = yf:read('*all')
+local translations = require'tinyyaml'.parse(content)
+yf:close()
 
 local utf8 = require'.utf8lua':init()
 for k, v in pairs(utf8) do string[k] = v end

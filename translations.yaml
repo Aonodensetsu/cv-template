@@ -1,0 +1,20 @@
+---
+# translation_ID:
+#   2_letter_language_code: translation
+#   2_letter_language_code2: >
+#     multiline translation2
+#     new lines converted to spaces
+
+# --- HEADERS ---
+# -- Sidebar headers (\aside)
+# --- SUMMARY ---
+# --- ROLES ---
+# --- POINTS ---
+# --- MISCELLANEOUS ---
+m_consent:
+  en: i~consent for my~personal data to~be~processed for~the~purpose of~recruitment
+m_accuracy:
+  en: information accurate as of
+# --- USED IN FUNCTIONS ---
+ongoing:
+  en: ongoing
