@@ -21,8 +21,8 @@ $combos | ForEach-Object -ThrottleLimit 8 -Parallel {
     if ($_.CVVER -eq "png") {
         pdftoppm -png .\aux\$jobname-out\cv.pdf .\aux\$jobname-out\page
         magick .\aux\$jobname-out\page* -append .\aux\$jobname-out\cv.png
-        Copy-Item .\aux\$jobname-out\cv.png .\out\$jobname.png
+        Copy-Item .\aux\$jobname-out\cv.png ".\out\$($_.CVLANG).png"
     } else {
-        Copy-Item .\aux\$jobname-out\cv.pdf .\out\$jobname.pdf
+        Copy-Item .\aux\$jobname-out\cv.pdf ".\out\$($_.CVLANG).pdf"
     }
 }
