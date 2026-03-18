@@ -30,7 +30,7 @@ local tl_debug = false
 
 
 local ver = os.getenv'CVVER' or 'pdf'
-local lang = os.getenv'CVLANG' or 'en'
+local lang = (os.getenv 'LANG' or 'en'):sub(1, 2)
 
 local yf = io.open('translations.yaml', 'r')
 local content = yf:read('*all')
@@ -180,7 +180,7 @@ function starbar(num)
         subdivisions=1,
       ]{%{1}}
     ]] % { num })
-    if num == 1 then print [[{\hspace{-0.5em}\color{section-compound}\size{18}\icon{stars}[solid]}]] end
+    if num == 1 then print [[{\rlap{\hspace{-0.5em}\color{section-compound}\size{18}\icon{stars}[solid]}}]] end
     print [[\\]]
 end
 

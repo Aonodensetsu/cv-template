@@ -18,6 +18,7 @@
 \usepackage{calc}              % math operations for lengths
 \usepackage{xcolor}            % define reusable RGB colors
 \usepackage{fontspec}          % change the main font
+\usepackage{datetime2}         % date formatting
 \usepackage{parskip}           % paragraph layout
 \usepackage{paracol}           % column layout
 \usepackage{tabularx}          % table layout
@@ -254,7 +255,7 @@
       % below is a disclaimer you probably want to uncomment and keep
 
       %\vspace{\fill}
-      %\begingroup\size{7} \tl{m_accuracy}[cap] 18.10.2025\endgroup
+      %\begingroup\size{7} \tl{m_accuracy}[cap] \today.\endgroup
     \end{center}
     \switchcolumn
     % --- MAIN BAR ---
@@ -262,10 +263,11 @@
 	% example content
     % you probably want to replace this with your resume
 
-    Hey! Thanks for checking this file out!
+    Hey!
+    Thanks for checking this file out!
 
     This is the example content that will quickly outline\\
-    the~commands prepared for use in this template.
+    the~commands prepared for use in this CV/resume template.
 
     \vspace{4mm}
 
@@ -286,7 +288,8 @@
     \verb!\whenpdf{YES}{NO}!
 
     Prints the content of \textit{YES} when compiling the PDF version and~\textit{NO}~when compiling the PNG version.
-    The version is selected with the \textit{CVVER} environment variable. The provided compile script makes both.
+    The version is selected with the \textit{CVVER} environment variable.
+    The provided compile script makes both.
 
     The clickable links use it to display as normal text in image form, since they're not clickable on the image anyway.
 
@@ -302,7 +305,8 @@
 
     Inserts translated text (the translations are set in the YAML file), optionally formatting it.
 
-    The language is selected with the \textit{CVLANG} environment flag. The provided compile script can be set to compile all desired language variants (line 2).
+    The language is selected with the \textit{LANG} environment flag.
+    The provided compile script can be set to compile all desired language variants (line 2).
 
     \switchcolumn*
 
@@ -325,8 +329,8 @@
       \item \textbf{upper:} PRINTS THE TEXT AS UPPERCASE
       \item \textbf{lower:} prints the text as lowercase
       \item \textbf{cap:} Capitalizes the first letter
-      \item \textbf{sentence:} Like cap, adds a dot at the end.
-      \item \textbf{title:} Uses The Rules of Title Case (english rules provided, other languages need setup in the Lua file)
+      \item \textbf{sentence:} Like \emph{cap}, adds a dot at the end.
+      \item \textbf{title:} Uses The Rules of Title Case (English rules provided, other languages need setup in the Lua file, line 16)
     \end{itemize}
 
     \vspace{4mm}
@@ -350,9 +354,11 @@
 
     \verb!\icon[SIZE]{ICON}[STYLE]!
 
-    Inserts a FontAwesome icon by name. Converts it to an image first, so that it is not seen by bots as text.
+    Inserts a FontAwesome icon by name.
+    Converts it to an image first, so that it is not seen by bots as text.
 
-    The icon is scaled to the current text size at \textit{SIZE} = 1 (which is the default). Values above 1 grow it, and vice versa.
+    The icon is scaled to the current text size at \textit{SIZE} = 1 (which is the default).
+    Values above 1 grow it, and vice versa.
 
     The style parameter selects between available FontAwesome font variants.
 
@@ -365,6 +371,9 @@
 
       \begingroup\color{lightgray}\verb!\link{https://example.com}!:\endgroup\\
       \link{https://example.com}
+      
+      \begingroup\color{lightgray}\verb!\link[example]{https://example.com}!:\endgroup\\
+      \link[example]{https://example.com}
 
     \end{center}
 
@@ -377,13 +386,12 @@
 
     If \textit{NAME} is not specified, its value is the same as \textit{URL}.
 
-    \begingroup\color{gray}\verb!\link[name]{https://example.com}!:\endgroup\ \link[name]{https://example.com}
-
     \newpage
 
     \verb!\separate[NUM]!
 
-    Draws horizontal lines dividing the content. Meant to go~between ``\textit{separate}'' topics in the main content.
+    Draws horizontal lines dividing the content.
+    Meant to go~between ``\textit{separate}'' topics in the main content.
 
     \begingroup\color{gray}\verb!\separate!:\endgroup
     \separate
@@ -410,7 +418,9 @@
 
     \verb!\starbar[FRAC]!
 
-    Draws a progress bar. When full, marks it with a star icon. The default value is full.
+    Draws a progress bar.
+    When full, marks it with a star icon.
+    The default value is full.
 
     The background color of the bar matches the background of~the~sidebar, it's best used as a highlighted skills section.
 
@@ -420,9 +430,10 @@
 
     \verb!\pill{TEXT}!
 
-    Writes an outlined piece of text. Designed for short tags in~the main content.
+    Writes an outlined piece of text.
+    Designed for short tags in~the main content.
 
-    \pill{Language} \pill{Tool} \pill{Achievment} \pill{Certificate}
+    \pill{Language} \pill{Tool} \pill{Achievement} \pill{Certificate}
 
     \pill{Will work with more text in it but at most one full line because it does not wrap................}
 
@@ -442,13 +453,16 @@
 
     \verb!\aside{TEXT}!
 
-    A section header meant for the sidebar. Works best in~a~centered environment, which this template provides.
+    A section header meant for the sidebar.
+    Works best in~a~centered environment, which this template provides.
 
     \vspace{4mm}
 
     \verb!\header{ICON}[STYLE]{TEXT}!
 
-    A section header meant for the main content. STYLE refers to~the~icon parameter. In opposition to all other uses, the style defaults to solid here, because of the colored background.
+    A section header meant for the main content.
+    STYLE refers to~the~icon parameter.
+    In opposition to all other uses, the style defaults to solid here, because of the colored background.
 
     \begingroup\color{gray}\verb!\header{th-large}{Section}!:\endgroup
     \header{th-large}{Section}
@@ -457,9 +471,10 @@
 
     \verb!\role{ROLE}{PLACE}{CITY}{START}[END][SPLIT]!
 
-    Refers to a work or education section. END is an optional end time, defaulting to a translated version of ``ongoing''.
+    Refers to a work or education section.
+    END is an optional end time, defaulting to a translated version of ``ongoing''.
 
-    SPLIT is the fraction of space given to the left column, by~default 0.7 (this is to allow for very long texts with some manual tweaking).
+    SPLIT is the fraction of space given to the left column, by~default 0.7 (this is to allow for very long texts with some tweaking).
 
     \begingroup\color{gray}\verb!\role{Job Title Name}{Employer Company Ltd.}{City}{Today}!:\endgroup
     \role{Job Title Name}{Employer Company Ltd.}{City}{Today}
@@ -473,14 +488,15 @@
     \begin{center}
       \color{page}
 
-      \begingroup\color{lightgray}(default icon)\endgroup
+      \begingroup\color{lightgray}\verb!\point{technically works here}!:\endgroup
       \point{technically works here}
 
     \end{center}
 
     \switchcolumn
 
-    Draws a pointed out paragraph, you can think of it as a list item. The icon parameters are customizable as well.
+    Draws a pointed out paragraph, you can think of it as a list item.
+    The icon parameters are customizable as well.
 
     \begingroup\color{gray}\verb!\point[long-arrow-alt-right]{Except...}!:\endgroup
     \point[long-arrow-alt-right]{Except it stays aligned with the icon when the text is~longer than one line, such as here.}
